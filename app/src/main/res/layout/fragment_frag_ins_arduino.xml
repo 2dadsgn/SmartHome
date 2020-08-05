@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".createNewArduino.fragInsArduino">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TextView
+                android:id="@+id/textViewArduinoCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="264dp"
+                android:text="Insert the arduino code"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+                android:id="@+id/nextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_rounded_border"
+                android:backgroundTint="@android:color/white"
+                android:fontFamily="sans-serif-black"
+                android:text="Next"
+                android:textColor="#4AD2FF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/ediTextArduinoCode"
+                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintStart_toStartOf="@+id/ediTextArduinoCode"
+                app:layout_constraintTop_toBottomOf="@+id/textViewErrore"
+                app:layout_constraintVertical_bias="0.089" />
+
+        <EditText
+                android:id="@+id/ediTextArduinoCode"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/custom_rounded_border"
+                android:backgroundTint="#3BA7C4"
+                android:ems="10"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="@+id/textViewArduinoCode"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/textViewArduinoCode"
+                app:layout_constraintTop_toBottomOf="@+id/textViewArduinoCode" />
+
+        <TextView
+                android:id="@+id/textViewErrore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="errore"
+                android:textColor="@android:color/holo_red_light"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="@+id/nextButton"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="@+id/nextButton"
+                app:layout_constraintTop_toBottomOf="@+id/ediTextArduinoCode" />
+
+        <RadioButton
+                android:id="@+id/radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBaseline_toBaselineOf="@+id/radioButton2"
+                app:layout_constraintEnd_toStartOf="@+id/radioButton2"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/nextButton"
+                android:clickable="false"
+                android:checked="true"
+                android:buttonTint="@android:color/holo_blue_dark"/>
+
+        <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/nextButton"
+                app:layout_constraintTop_toBottomOf="@+id/nextButton"
+                android:clickable="false"
+                android:checked="false"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
