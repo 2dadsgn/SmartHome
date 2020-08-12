@@ -4,12 +4,14 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#4AD2FF"
         tools:context=".StatHome.StatisticheActivity">
 
     <ImageView
             android:id="@+id/imageView2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="#4AD2FF"
             android:foreground="#CC4AD2FF"
             android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -17,8 +19,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/kitchen_2165756_1280" />
+            app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
             android:id="@+id/menu3"

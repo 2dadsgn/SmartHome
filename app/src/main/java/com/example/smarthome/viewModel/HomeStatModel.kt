@@ -1,6 +1,9 @@
 package com.example.smarthome.viewModel
 
+import android.app.Activity
+import android.app.Application
 import androidx.lifecycle.ViewModel
+import com.example.smarthome.Room.AppClassDatabase
 import com.example.smarthome.Room.Arduino
 import com.example.smarthome.Room.Stanza
 
@@ -10,5 +13,8 @@ class HomeStatModel: ViewModel(){
     var Stanze: List<Stanza>? = null
 
     var arduini : List<Arduino> ? = null
+
+
+
 
 }

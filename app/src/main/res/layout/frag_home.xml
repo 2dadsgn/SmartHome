@@ -67,22 +67,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                <ImageButton
-                        android:id="@+id/deleteStanza1"
-                        android:layout_width="11dp"
-                        android:layout_height="11dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
-                        android:background="#00FFFFFF"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.957"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.082"
-                        tools:srcCompat="@drawable/delete_stanza" />
-
                 <TextView
                         android:id="@+id/stanza1Textview"
                         android:layout_width="wrap_content"
@@ -109,6 +93,23 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/add_room" />
+
+                <ImageButton
+                        android:id="@+id/BTConnection1"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="#00FFFFFF"
+                        android:scaleType="fitCenter"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toEndOf="@+id/addroomStanza1"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
 
@@ -127,6 +128,22 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
+                <ImageButton
+                        android:id="@+id/BTConnection2"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="#00FFFFFF"
+                        android:scaleType="fitCenter"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toEndOf="@+id/addroomStanza2"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
 
                 <ImageButton
                         android:id="@+id/addroomStanza2"
@@ -155,21 +172,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageButton
-                        android:id="@+id/deleteStanza2"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
-                        android:background="#00FFFFFF"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.877"
-                        app:layout_constraintStart_toEndOf="@+id/addroomStanza2"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:srcCompat="@drawable/delete_stanza" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
 
@@ -190,20 +192,20 @@
                     android:layout_height="match_parent">
 
                 <ImageButton
-                        android:id="@+id/deleteStanza3"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
+                        android:id="@+id/BTConnection3"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginRight="16dp"
                         android:background="#00FFFFFF"
+                        android:scaleType="fitCenter"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.868"
+                        app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toEndOf="@+id/addroomStanza3"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.218"
-                        tools:srcCompat="@drawable/delete_stanza" />
+                        app:layout_constraintVertical_bias="0.0" />
 
                 <ImageButton
                         android:id="@+id/addroomStanza3"

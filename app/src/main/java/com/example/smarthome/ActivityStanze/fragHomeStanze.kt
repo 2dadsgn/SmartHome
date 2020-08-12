@@ -1,5 +1,10 @@
 package com.example.smarthome.ActivityStanze
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Application
+import android.bluetooth.BluetoothDevice
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -11,9 +16,15 @@ import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.example.smarthome.R
+import com.example.smarthome.Room.AppClassDatabase
+import com.example.smarthome.Room.Arduino
 import com.example.smarthome.TAG
 import com.example.smarthome.viewModel.HomeStatModel
 import kotlinx.android.synthetic.main.frag_home.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.math.log
 
 
 class fragHomeStanze : Fragment() {
@@ -27,7 +38,6 @@ class fragHomeStanze : Fragment() {
     internal var callback2: onRoomSelectedListener? = null
 
 
-
     fun setOnAddRoomPressedListener(callback: onAddRoomPressedListener) {
         this.callback = callback
     }
@@ -36,6 +46,7 @@ class fragHomeStanze : Fragment() {
     fun setOnRoomSelectedListener(callback: onRoomSelectedListener) {
         this.callback2 = callback
     }
+
 
     //interfaccia per callback su click della stanza
     interface onRoomSelectedListener{
@@ -48,8 +59,52 @@ class fragHomeStanze : Fragment() {
         fun onAddRoomPressed()
     }
 
+
+    lateinit var db  : AppClassDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val applicazione:Application? = activity?.application
+        db =  AppClassDatabase.get(applicazione!!)
+
+        //ricerca in lista dispositivi associati  e imposta valore paired se associati
+        try {
+            //ottiene i device paired
+            val pairedDevices: Set<BluetoothDevice>? = HomeStanzeActivity.bluetoothAdapter?.bondedDevices
+
+            pairedDevices?.forEach { device ->
+
+                //ottiene info dispositivi paired
+                val deviceName = device.name
+                val deviceHardwareAddress = device.address // MAC address
+                var listaArduini : List<Arduino>
+
+                CoroutineScope(Dispatchers.Default).launch {
+                    listaArduini = db.arduinoDao().getAll()
+
+                    if (listaArduini.size != 0){
+                        //itera gli arduini per verificare chi è già accoppiato col dispositivo mobile
+                        Log.d(TAG,"--Lista device associati--")
+                        for (i in listaArduini!!) {
+                            Log.d(TAG, "    ${deviceName} >--<  ${i.id}  ")
+                            if (deviceName == i.id) {
+                                Log.d(TAG, "    the above arduino is already paired!")
+                                i.paired = 1
+                                //inserisce indirizzo in DB
+                                i.address = deviceHardwareAddress
+                                CoroutineScope(Dispatchers.Default).launch {
+                                    db.arduinoDao().update(i)
+                                }
+                            }
+                        }
+                        Log.d(TAG,"---Fine lista---")
+                    }
+                }
+            }
+        }
+        catch (e : Exception){
+            Log.d(TAG,"Errore in ricerca dispositivi accoppiato in FragHome fragment da HomestanzeActivity" + e.toString())
+        }
 
 
     }
@@ -78,21 +133,41 @@ class fragHomeStanze : Fragment() {
         //lista di TextViewStanza
         val TextViewStanze = mutableListOf(stanza2Textview,stanza1Textview,stanza3Textview)
 
+        //lista di BTConnectionButton
+        val BTButtons = mutableListOf(BTConnection2,BTConnection1,BTConnection3)
+
         //lista container stanze
         val StanzeContainer = mutableListOf(stanza2,stanza1,stanza3)
 
         var indice = model.Stanze?.indices
 
-        if (indice!!.endInclusive != 0) {
-            Log.d(TAG,"FRAGHOME---> ${model.Stanze.toString()}")
+
+        // -1 quando lista vuota
+        if (indice?.endInclusive != -1) {
 
             for ( i in indice!!){
+
                 //imposta il colore del riquadro stanza
-                FrameLayoutList.get(i)
+                FrameLayoutList.get(i) //todo .....
+
+                //coroutine per impostare icona blueooth associato
+                CoroutineScope(Dispatchers.Default).launch {
+                    //ricerca prima arduino tramite stanza e poi il valore paired
+                    var code = db.stanzaDao().findByName(model.Stanze?.get(i)?.nome.toString()).ArduinoCode
+                    var paired = db.arduinoDao().getOneWithID(code).paired
+
+                    //imposta icona bluetooth se arduino associato
+                    if (paired == 1){
+
+                        BTButtons.get(i).setBackgroundResource(android.R.drawable.stat_sys_data_bluetooth)
+                    }
+                }
                 //nasconde la scritta addRoom se esistente
                 AddRoomStanze.get(i).isVisible = false
+
                 //imposta nome stanza nel TextView
                 TextViewStanze.get(i).setText(model.Stanze?.get(i)?.nome.toString())
+
                 //imposta il listener
                 TextViewStanze.get(i).setOnClickListener{
                     callback2?.onRoomSelected()

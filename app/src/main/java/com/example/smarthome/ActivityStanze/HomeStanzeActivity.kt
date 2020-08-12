@@ -1,14 +1,22 @@
 package com.example.smarthome.ActivityStanze
 
+import android.app.Activity
+import android.app.PendingIntent.getActivity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.content.ContentProvider
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP
 import android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.test.runner.intent.IntentMonitor
 import com.example.smarthome.R
@@ -17,7 +25,9 @@ import com.example.smarthome.SearchArduinoBT.SearchArduinoActivity
 import com.example.smarthome.StatHome.StatisticheActivity
 import com.example.smarthome.createNewArduino.newArduinoActivty
 import com.example.smarthome.viewModel.HomeStatModel
+import kotlinx.android.synthetic.main.frag_home.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -30,6 +40,7 @@ class HomeStanzeActivity : AppCompatActivity(),
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     }
 
+
     //dichiarazione ViewModel
     val model: HomeStatModel by viewModels()
 
@@ -39,7 +50,14 @@ class HomeStanzeActivity : AppCompatActivity(),
     //fragment home
     val FragHome = fragHomeStanze()
 
+    lateinit var db :AppClassDatabase
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        //Database
+         db = AppClassDatabase.get(application)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_stanze)
         FragManager.add(R.id.fragmentHolderHome, FragHome)
@@ -52,8 +70,10 @@ class HomeStanzeActivity : AppCompatActivity(),
             val db = AppClassDatabase.get(application)
             model.Stanze = db.stanzaDao().getAll()
             model.arduini = db.arduinoDao().getAll()
-            Log.d(com.example.smarthome.TAG, "model.Stanze!!.indices.toString()")
         }
+
+
+
     }
 
     override fun onStart() {
@@ -65,52 +85,8 @@ class HomeStanzeActivity : AppCompatActivity(),
         if (bluetoothAdapter?.isEnabled == false) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBtIntent, 2)
-            Log.d(com.example.smarthome.TAG,"bluetooth !!")
+            Log.d(com.example.smarthome.TAG,"richiesta di attivazione per utente")
         }
-
-
-        try {
-            //ottiene i devide paired
-            val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
-
-            if (model.arduini == null){
-                //non fare nulla
-            }
-            else {
-                pairedDevices?.forEach { device ->
-
-                    //ottiene info dispositivi paired
-                    val deviceName = device.name
-                    val deviceHardwareAddress = device.address // MAC address
-
-                    //itera gli arduini per verificare chi è già accoppiato col dispositivo mobile
-                    //todo si presume che arduini abbiano come nome il codice arduino
-                    for (i in model.arduini!!){
-                        if(deviceName == i.id){
-                            i.paired = 1
-                        }
-                    }
-                }
-
-                //ricerca arduini non ancora associati
-                for(i in model.arduini!!){
-                    //se non è stato ancora associato
-                    if(i.paired != 1){
-                        //todo va associato
-                        //todo lancio una coroutine per cercare dispositivi nelle vicinanze con nomi corrisspondenti
-                        //ToDo appena trova un arduino effettua connessione e retrieve data
-                        Log.d(TAG,"c'è qualcuno da associare")
-                        var intent = Intent(this,SearchArduinoActivity::class.java)
-                        //startActivityForResult(intent,2)
-                    }
-                }
-            }
-
-        }
-        catch (e : Exception){
-            Log.d(TAG,e.toString())
-        }
-
 
     }
 
@@ -125,11 +101,12 @@ class HomeStanzeActivity : AppCompatActivity(),
     //inserisce listener alla creazione dell'attività
     override fun onAttachFragment(fragment: Fragment) {
         if (fragment is fragHomeStanze) {
-            Log.d(com.example.smarthome.TAG, "fragsceltaArduino attached and listener placed")
             fragment.setOnAddRoomPressedListener(this)
             fragment.setOnRoomSelectedListener(this)
         }
     }
+
+
     override fun onRoomSelected() {
         finish()
         intent = Intent(this,StatisticheActivity::class.java)

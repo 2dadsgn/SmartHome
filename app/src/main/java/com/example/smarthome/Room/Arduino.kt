@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Arduino(
-    @PrimaryKey val id: String,
-    var paired : Int = 0
+    @PrimaryKey var id: String,
+    var paired : Int = 0,
+    var address : String? = null
+
 )

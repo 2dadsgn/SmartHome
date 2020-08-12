@@ -13,6 +13,6 @@ import androidx.room.PrimaryKey
 ))
 data class Stanza(
     @PrimaryKey val nome: String,
-    @ColumnInfo val ArduinoCode: String?,
+    @ColumnInfo val ArduinoCode: String,
     @ColumnInfo val LastData: String?
 )

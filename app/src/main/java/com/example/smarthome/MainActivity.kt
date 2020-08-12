@@ -28,8 +28,8 @@ val TAG: String = "MainAct"
 class MainActivity : AppCompatActivity() {
 
 
-    private var ArduinoCursore:List<Arduino>? = null
-    private var StanzaCursore:List<Stanza>? = null
+    private var ArduinoCursore: List<Arduino>? = null
+    private var StanzaCursore: List<Stanza>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +39,9 @@ class MainActivity : AppCompatActivity() {
             finish();
         }
 
-        //oggetto DB
+
         val db = AppClassDatabase.get(application)
+
 
         setContentView(R.layout.loading_home)
 
@@ -62,36 +63,18 @@ class MainActivity : AppCompatActivity() {
 
             //controlla se ci esistono stanze
             try {
-                if (ArduinoCursore.isNullOrEmpty()) {
-                    intent = Intent(this, HomeStanzeActivity::class.java)
-                    intent.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT)
+                intent = Intent(this, HomeStanzeActivity::class.java)
+                intent.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT)
 
-                    startActivity(intent)
+                startActivity(intent)
 
-                    Log.d(TAG, "CODE 1 ---no arduino FOUND! transizione to fragInsArduino---")
+                Log.d(TAG, "transizione to HomeStatActivity")
 
-                } else {
-
-                    //start home activity
-                    intent = Intent(this, HomeStanzeActivity::class.java)
-                    intent.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT)
-
-                    startActivity(intent)
-                    Log.d(
-                        TAG,
-                        "Arduino code found in DB, launching HomeStat activity "
-                    )
-                }
             } catch (e: Exception) {
                 Log.d(TAG, e.toString())
 
             }
-            //imposta la schermata principale con view stanze
-            //per evitare di avere la schermata di caricamente prima di uscire dall app
-            //todo sistemare e impostare chiusura app su backButton
-            setContentView(R.layout.activity_home_stanze)
-            val FragHome = fragInsArduino()
-            supportFragmentManager.beginTransaction().add(R.id.fragmentHolderHome, FragHome).commit()
+
 
         }, 2000)
     }

@@ -132,9 +132,9 @@ class newArduinoActivty : AppCompatActivity(),
                 }
                 else if(ediTextArduinoCode.text.toString() == ""){
                     Log.d(com.example.smarthome.TAG, "arduino già presente")
-                    //lancia errore per arduino già presente
-                    textViewErrore.isVisible = true
-                    textViewErrore.setText("Inserire codice arduino")
+                    //lancia errore per arduino non inserito
+                    val toast = Toast.makeText(applicationContext,"Errore nessuno codice inserito",Toast.LENGTH_LONG)
+                    toast.show()
 
                 }
                 else {
@@ -150,5 +150,16 @@ class newArduinoActivty : AppCompatActivity(),
         }
         Log.d(com.example.smarthome.TAG, "next pressed")
 
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+        intent = Intent(this, HomeStanzeActivity::class.java)
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+
+        startActivity(intent)
+
+        Log.d(com.example.smarthome.TAG, "Premuto backButton ritorno a schermata stanze")
     }
 }

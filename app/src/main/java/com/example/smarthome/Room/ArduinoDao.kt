@@ -1,9 +1,6 @@
 package com.example.smarthome.Room
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface ArduinoDao {
@@ -18,4 +15,7 @@ interface ArduinoDao {
 
     @Delete
     fun delete(user: Arduino)
+
+    @Update
+    fun update(arduino :Arduino)
 }

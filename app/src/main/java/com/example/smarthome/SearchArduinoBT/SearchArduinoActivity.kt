@@ -39,7 +39,9 @@ class SearchArduinoActivity : AppCompatActivity() {
                     // object and its info from the Intent.
                     val device: BluetoothDevice  =
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                    //assegna nome
                     val deviceName = device.name
+                    //assegna indirizzo
                     val deviceHardwareAddress = device.address // MAC address
                 }
             }
@@ -52,6 +54,12 @@ class SearchArduinoActivity : AppCompatActivity() {
 
         // Don't forget to unregister the ACTION_FOUND receiver.
         unregisterReceiver(receiver)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+
     }
 
 
