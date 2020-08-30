@@ -18,13 +18,18 @@ import androidx.fragment.app.activityViewModels
 import com.example.smarthome.R
 import com.example.smarthome.Room.AppClassDatabase
 import com.example.smarthome.Room.Arduino
+import com.example.smarthome.Room.Stanza
+import com.example.smarthome.StatHome.StatisticheActivity
 import com.example.smarthome.TAG
 import com.example.smarthome.viewModel.HomeStatModel
 import kotlinx.android.synthetic.main.frag_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 import kotlin.math.log
+
+
 
 
 class fragHomeStanze : Fragment() {
@@ -32,10 +37,15 @@ class fragHomeStanze : Fragment() {
     //dichiarazione ViewModel
     val model: HomeStatModel by activityViewModels()
 
+    //UUID
+    var MyUUID = "123abcd"
+
 
     internal var callback: onAddRoomPressedListener? = null
 
     internal var callback2: onRoomSelectedListener? = null
+
+    internal var callbackDelete: onDeletePressedListener? = null
 
 
     fun setOnAddRoomPressedListener(callback: onAddRoomPressedListener) {
@@ -47,16 +57,24 @@ class fragHomeStanze : Fragment() {
         this.callback2 = callback
     }
 
+    fun setDeletePressedListener(callback: onDeletePressedListener) {
+        this.callbackDelete = callback
+    }
+
 
     //interfaccia per callback su click della stanza
     interface onRoomSelectedListener{
-        fun onRoomSelected()
+        fun onRoomSelected(nome:String)
     }
 
     // This interface can be implemented by the Activity, parent Fragment,
     // or a separate test implementation.
     interface onAddRoomPressedListener {
         fun onAddRoomPressed()
+    }
+
+    interface onDeletePressedListener {
+        fun onDeletePressed(nomeStanza:String)
     }
 
 
@@ -83,6 +101,7 @@ class fragHomeStanze : Fragment() {
                     listaArduini = db.arduinoDao().getAll()
 
                     if (listaArduini.size != 0){
+
                         //itera gli arduini per verificare chi è già accoppiato col dispositivo mobile
                         Log.d(TAG,"--Lista device associati--")
                         for (i in listaArduini!!) {
@@ -90,8 +109,11 @@ class fragHomeStanze : Fragment() {
                             if (deviceName == i.id) {
                                 Log.d(TAG, "    the above arduino is already paired!")
                                 i.paired = 1
+
                                 //inserisce indirizzo in DB
                                 i.address = deviceHardwareAddress
+
+                                //aggiorna dati ardunio inserendo PAIRED e ADDRESS in DB
                                 CoroutineScope(Dispatchers.Default).launch {
                                     db.arduinoDao().update(i)
                                 }
@@ -123,6 +145,9 @@ class fragHomeStanze : Fragment() {
         //lista di ADDROOMTEXT
         val AddRoomStanze = mutableListOf(addroomStanza2,addroomStanza1,addroomStanza3)
 
+        //lista di delete
+        val DeleteButtons = mutableListOf(delete2,delete1,delete3)
+
         //lista colori
         val listaColori = mutableListOf("#F2B6CC","#BAD0FF","#FFC4B1")
 
@@ -139,44 +164,58 @@ class fragHomeStanze : Fragment() {
         //lista container stanze
         val StanzeContainer = mutableListOf(stanza2,stanza1,stanza3)
 
-        var indice = model.Stanze?.indices
 
 
-        // -1 quando lista vuota
-        if (indice?.endInclusive != -1) {
+        CoroutineScope(Dispatchers.Default).launch {
+            var listaStanza : MutableList<Stanza> = db.stanzaDao().getAll().toMutableList()
 
-            for ( i in indice!!){
+            var indice = listaStanza.indices
 
-                //imposta il colore del riquadro stanza
-                FrameLayoutList.get(i) //todo .....
+            //effettua controllo su size lista , se non ci sono stanze non c'è niente da caricare
 
-                //coroutine per impostare icona blueooth associato
-                CoroutineScope(Dispatchers.Default).launch {
+            if (listaStanza.size != 0) {
+
+                for ( i in indice!!){
+
+                    //imposta il colore del riquadro stanza
+                    FrameLayoutList.get(i) //todo .....
+
                     //ricerca prima arduino tramite stanza e poi il valore paired
                     var code = db.stanzaDao().findByName(model.Stanze?.get(i)?.nome.toString()).ArduinoCode
                     var paired = db.arduinoDao().getOneWithID(code).paired
 
                     //imposta icona bluetooth se arduino associato
                     if (paired == 1){
-
                         BTButtons.get(i).setBackgroundResource(android.R.drawable.stat_sys_data_bluetooth)
                     }
-                }
-                //nasconde la scritta addRoom se esistente
-                AddRoomStanze.get(i).isVisible = false
 
-                //imposta nome stanza nel TextView
-                TextViewStanze.get(i).setText(model.Stanze?.get(i)?.nome.toString())
+                    //nasconde la scritta addRoom se esistente
+                    AddRoomStanze.get(i).isVisible = false
 
-                //imposta il listener
-                TextViewStanze.get(i).setOnClickListener{
-                    callback2?.onRoomSelected()
-                }
-                StanzeContainer.get(i).setOnClickListener{
-                    callback2?.onRoomSelected()
+                    //mostra tasto per eliminazione
+                    DeleteButtons.get(i).isVisible = true
+
+                    //imposta nome stanza nel TextView
+                    TextViewStanze.get(i).setText(model.Stanze?.get(i)?.nome.toString())
+
+                    //imposta il listener
+                    TextViewStanze.get(i).setOnClickListener{
+                        callback2?.onRoomSelected(TextViewStanze.get(i).text.toString())
+                        HomeStanzeActivity.ActualStanza = TextViewStanze.get(i).text.toString()
+                    }
+                    StanzeContainer.get(i).setOnClickListener{
+                        callback2?.onRoomSelected(TextViewStanze.get(i).text.toString())
+                        HomeStanzeActivity.ActualStanza = TextViewStanze.get(i).text.toString()
+                    }
                 }
             }
+            else{
+                Log.d(TAG,"Attenzione nessuna stanza da caricare")
+            }
         }
+
+
+
 
         addroomStanza1.setOnClickListener {
             callback?.onAddRoomPressed()
@@ -186,6 +225,16 @@ class fragHomeStanze : Fragment() {
         }
         addroomStanza3.setOnClickListener {
             callback?.onAddRoomPressed()
+        }
+
+        delete1.setOnClickListener{
+            callbackDelete?.onDeletePressed(stanza1Textview.text.toString())
+        }
+        delete2.setOnClickListener{
+            callbackDelete?.onDeletePressed(stanza2Textview.text.toString())
+        }
+        delete3.setOnClickListener{
+            callbackDelete?.onDeletePressed(stanza3Textview.text.toString())
         }
 
     }

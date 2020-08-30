@@ -12,12 +12,14 @@ import android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.TextKeyListener.clear
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.test.runner.intent.IntentMonitor
 import com.example.smarthome.R
 import com.example.smarthome.Room.AppClassDatabase
@@ -34,10 +36,12 @@ import kotlinx.coroutines.launch
 val TAG = "MainAct"
 
 class HomeStanzeActivity : AppCompatActivity(),
-    fragHomeStanze.onAddRoomPressedListener, fragHomeStanze.onRoomSelectedListener {
+    fragHomeStanze.onAddRoomPressedListener, fragHomeStanze.onRoomSelectedListener,fragHomeStanze.onDeletePressedListener {
+
 
     companion object{
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+        var ActualStanza :String ? = null
     }
 
 
@@ -64,16 +68,7 @@ class HomeStanzeActivity : AppCompatActivity(),
         FragManager.addToBackStack(null)
         FragManager.commit()
 
-
-        //lancia coroutine per pescare dati da DB
-        CoroutineScope(IO).launch {
-            val db = AppClassDatabase.get(application)
-            model.Stanze = db.stanzaDao().getAll()
-            model.arduini = db.arduinoDao().getAll()
-        }
-
-
-
+        aggiornaListaModel()
     }
 
     override fun onStart() {
@@ -91,6 +86,31 @@ class HomeStanzeActivity : AppCompatActivity(),
     }
 
 
+    override fun onDeletePressed(nomestanza:String) {
+
+        try {
+            //effettua cancellazione stanza ed arduino
+            CoroutineScope(Dispatchers.Default).launch {
+                Log.d(TAG,nomestanza)
+                var stanza = db.stanzaDao().findByName(nomestanza)
+
+                var arduino = db.arduinoDao().getOneWithID(stanza.ArduinoCode)
+
+                db.stanzaDao().delete(stanza)
+                db.arduinoDao().delete(arduino)
+            }
+        }
+        catch (ex : Exception){
+            Log.d(TAG,ex.toString())
+        }
+
+        //rilancia la activity per aggiornare UI
+        finish()
+        intent = Intent(this,HomeStanzeActivity::class.java)
+        intent.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT)
+        startActivity(intent)
+    }
+
 
     override fun onAddRoomPressed() {
         finish()
@@ -103,11 +123,13 @@ class HomeStanzeActivity : AppCompatActivity(),
         if (fragment is fragHomeStanze) {
             fragment.setOnAddRoomPressedListener(this)
             fragment.setOnRoomSelectedListener(this)
+            fragment.setDeletePressedListener(this)
         }
     }
 
 
-    override fun onRoomSelected() {
+    override fun onRoomSelected(nome:String) {
+
         finish()
         intent = Intent(this,StatisticheActivity::class.java)
         intent.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT)
@@ -118,4 +140,26 @@ class HomeStanzeActivity : AppCompatActivity(),
         super.onBackPressed()
         finish()
     }
+
+
+    //funzione per aggiornare lista stanze ed arduino in viewmodel
+     fun aggiornaListaModel(){
+         //lancia coroutine per pescare dati da DB, inserirli nel viewmodel
+         //cosi che il fragment fraghomestanza possa avere dati da visuallizare
+         CoroutineScope(IO).launch {
+             val db = AppClassDatabase.get(application)
+             model.Stanze?.clear()
+             model.arduini?.clear()
+             model.Stanze = db.stanzaDao().getAll().toMutableList()
+             model.arduini = db.arduinoDao().getAll().toMutableList()
+             try {
+                 Log.d(TAG,"---------******----------")
+                 Log.d(TAG,db.stanzaDao().getAll().toString())
+             }
+             catch (ex : Exception){
+                 Log.d(TAG,ex.toString())
+             }
+
+         }
+     }
 }

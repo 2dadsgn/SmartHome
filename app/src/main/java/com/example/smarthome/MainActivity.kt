@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
 
             //controlla se ci esistono stanze
             try {
+                finish()
                 intent = Intent(this, HomeStanzeActivity::class.java)
                 intent.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT)
 

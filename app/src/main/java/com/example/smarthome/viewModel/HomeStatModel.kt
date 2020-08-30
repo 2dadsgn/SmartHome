@@ -10,11 +10,12 @@ import com.example.smarthome.Room.Stanza
 class HomeStatModel: ViewModel(){
 
     //lista oggetti stanza da Db
-    var Stanze: List<Stanza>? = null
+    var Stanze: MutableList<Stanza> ? = null
 
-    var arduini : List<Arduino> ? = null
+     var arduini : MutableList<Arduino> ? = null
 
 
 
+    
 
 }
