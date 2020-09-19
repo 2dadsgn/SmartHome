@@ -24,6 +24,11 @@ class newArduinoActivty : AppCompatActivity(),
     fragInsArduino.OnNextPressedListener,
     SceltaStanza.OnStanzaSceltaListener {
 
+    private companion object{
+         var arduinoCode : String ? = null
+
+    }
+
     //fragment manager
     val FragManager = supportFragmentManager.beginTransaction()
 
@@ -81,6 +86,11 @@ class newArduinoActivty : AppCompatActivity(),
                 val StanzaEsistente = db.stanzaDao().findByName(model.ArduinoRoom)
 
                 if (StanzaEsistente == null) {
+
+                    //crea oggetto arduino e inserisce in DB
+                    val arduino = Arduino(ediTextArduinoCode.text.toString())
+                    db.arduinoDao().insertAll(arduino)
+
                     //inserisce in DB
                     db.stanzaDao().insertAll(stanza)
 
@@ -120,9 +130,7 @@ class newArduinoActivty : AppCompatActivity(),
 
                 if (result == null && ediTextArduinoCode.text.toString() != "") {
 
-                    //crea oggetto arduino e inserisce in DB
-                    val arduino = Arduino(ediTextArduinoCode.text.toString())
-                    db.arduinoDao().insertAll(arduino)
+
 
                     //imposta codice arduino da mostrare in frag successiva
                     model.ArduinoCode = ediTextArduinoCode.text.toString()

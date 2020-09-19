@@ -12,134 +12,77 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <Button
-                android:id="@+id/LivingRoom"
+        <EditText
+                android:id="@+id/locationInput"
                 android:layout_width="0dp"
-                android:layout_height="198dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_height="30dp"
                 android:background="@drawable/custom_rounded_border"
                 android:backgroundTint="#3BA7C4"
+                android:ems="10"
                 android:gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="Living Room"
+                android:inputType="textPersonName"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
-                android:textSize="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="@+id/textView"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.572" />
+                app:layout_constraintStart_toStartOf="@+id/textView"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                app:layout_constraintVertical_bias="0.093" />
 
         <Button
-                android:id="@+id/Kitchen"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
-                android:background="@drawable/custom_rounded_border"
-                android:backgroundTint="#3BA7C4"
-                android:gravity="center"
-                android:text="Kitchen"
-                android:textAlignment="center"
-                android:textSize="20dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="@+id/LivingRoom"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="@+id/LivingRoom" />
-
-        <Button
-                android:id="@+id/BedRoom"
-                android:layout_width="0dp"
-                android:layout_height="198dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/custom_rounded_border"
-                android:backgroundTint="#3BA7C4"
-                android:gravity="center"
-                android:text="Bed Room"
-                android:textAlignment="center"
-                android:textColor="@android:color/white"
-                android:textSize="20dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                app:layout_constraintBottom_toBottomOf="@+id/Kitchen"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toTopOf="@+id/Kitchen" />
-
-        <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline"
+                android:id="@+id/nextStanza"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintGuide_percent="0.35"
-                app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintGuide_percent="0.66"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:background="@drawable/custom_rounded_border"
+                android:backgroundTint="@android:color/white"
+                android:fontFamily="sans-serif-black"
+                android:text="Next"
+                android:textColor="#4AD2FF"
+                app:layout_constraintBottom_toTopOf="@+id/radioButton5"
+                app:layout_constraintEnd_toEndOf="@+id/locationInput"
+                app:layout_constraintStart_toStartOf="@+id/locationInput"
+                app:layout_constraintTop_toBottomOf="@+id/locationInput"
+                app:layout_constraintVertical_bias="0.493" />
 
         <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select the room you want to create"
+                android:gravity="center"
+                android:text="Insert your arduino's location"
+                android:textAlignment="center"
                 android:textColor="@android:color/white"
                 android:textSize="24dp"
-                android:textAlignment="center"
-                android:gravity="center"
-                app:layout_constraintBottom_toTopOf="@+id/Kitchen"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.496"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.818" />
-
-        <TextView
-                android:id="@+id/textViewErroreStanza"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="errore"
-                android:textColor="@android:color/holo_red_light"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toTopOf="@+id/radioButton6"
-                app:layout_constraintEnd_toEndOf="@+id/Kitchen"
-                app:layout_constraintStart_toStartOf="@+id/Kitchen"
-                app:layout_constraintTop_toBottomOf="@+id/Kitchen"
-                app:layout_constraintVertical_bias="0.537" />
+                app:layout_constraintVertical_bias="0.398" />
 
         <RadioButton
                 android:id="@+id/radioButton5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBaseline_toBaselineOf="@+id/radioButton6"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:clickable="false"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/radioButton6"
-                android:clickable="false" />
+                app:layout_constraintTop_toBottomOf="@+id/locationInput"
+                app:layout_constraintVertical_bias="0.579" />
 
         <RadioButton
                 android:id="@+id/radioButton6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="68dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.57"
-                app:layout_constraintStart_toStartOf="@+id/LivingRoom"
-                app:layout_constraintTop_toBottomOf="@+id/Kitchen"
-                android:clickable="false"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:buttonTint="@android:color/holo_blue_dark"
                 android:checked="true"
-                android:buttonTint="@android:color/holo_blue_dark"/>
+                android:clickable="false"
+                app:layout_constraintBaseline_toBaselineOf="@+id/radioButton5"
+                app:layout_constraintEnd_toEndOf="@+id/nextStanza" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

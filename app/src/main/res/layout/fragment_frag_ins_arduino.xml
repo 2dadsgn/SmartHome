@@ -14,13 +14,14 @@
                 android:id="@+id/textViewArduinoCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="264dp"
                 android:text="Insert the arduino code"
                 android:textColor="@android:color/white"
                 android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.368" />
 
         <Button
                 android:id="@+id/nextButton"
@@ -72,13 +73,13 @@
                 android:id="@+id/radioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="@android:color/holo_blue_dark"
+                android:checked="true"
+                android:clickable="false"
                 app:layout_constraintBaseline_toBaselineOf="@+id/radioButton2"
                 app:layout_constraintEnd_toStartOf="@+id/radioButton2"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/nextButton"
-                android:clickable="false"
-                android:checked="true"
-                android:buttonTint="@android:color/holo_blue_dark"/>
+                app:layout_constraintStart_toStartOf="@+id/nextButton" />
 
         <RadioButton
                 android:id="@+id/radioButton2"
@@ -86,10 +87,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:layout_marginRight="12dp"
+                android:checked="false"
+                android:clickable="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/nextButton"
-                app:layout_constraintTop_toBottomOf="@+id/nextButton"
-                android:clickable="false"
-                android:checked="false"/>
+                app:layout_constraintTop_toBottomOf="@+id/nextButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

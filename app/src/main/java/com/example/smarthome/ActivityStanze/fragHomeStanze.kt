@@ -177,8 +177,7 @@ class fragHomeStanze : Fragment() {
 
                 for ( i in indice!!){
 
-                    //imposta il colore del riquadro stanza
-                    FrameLayoutList.get(i) //todo .....
+
 
                     //ricerca prima arduino tramite stanza e poi il valore paired
                     var code = db.stanzaDao().findByName(model.Stanze?.get(i)?.nome.toString()).ArduinoCode
@@ -187,6 +186,9 @@ class fragHomeStanze : Fragment() {
                     //imposta icona bluetooth se arduino associato
                     if (paired == 1){
                         BTButtons.get(i).setBackgroundResource(android.R.drawable.stat_sys_data_bluetooth)
+
+                        //imposta il colore del riquadro stanza
+                        FrameLayoutList.get(i) //todo .....
                     }
 
                     //nasconde la scritta addRoom se esistente

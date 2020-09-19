@@ -51,23 +51,11 @@ class SceltaStanza : Fragment() {
 
 
         //click listener per tasto kitchen  per scelta stanza e ins in DB
-        Kitchen.setOnClickListener {
-            model.setarduinoRoom("kitchen")
-            Log.d("MainAct","Kitchen Selected!")
+       nextStanza.setOnClickListener {
+            model.setarduinoRoom(locationInput.text.toString())
             callback?.onStanzaScelta()
         }
-        //click listener per tasto livingroom  per scelta stanza e ins in DB
-        LivingRoom.setOnClickListener {
-            model.setarduinoRoom("Living Room")
-            Log.d("MainAct","Livingroom selected!")
-            callback?.onStanzaScelta()
-        }
-        //click listener per tasto bedroom per scelta stanza e ins in DB
-        BedRoom.setOnClickListener {
-            model.setarduinoRoom("Bed Room")
-            Log.d("MainAct","Bedroom selected!")
-            callback?.onStanzaScelta()
-        }
+
     }
 
 
