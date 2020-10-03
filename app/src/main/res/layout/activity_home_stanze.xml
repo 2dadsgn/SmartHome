@@ -4,8 +4,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ActivityStanze.HomeStanzeActivity"
-        android:background="#4AD2FF">
+        android:background="#43BEE8"
+        tools:context=".ActivityStanze.HomeStanzeActivity">
 
     <FrameLayout
             android:id="@+id/fragmentHolderHome"

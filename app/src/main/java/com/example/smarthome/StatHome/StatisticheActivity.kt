@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -16,6 +17,7 @@ import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import com.example.smarthome.ActivityStanze.HomeStanzeActivity
 import com.example.smarthome.ActivityStanze.fragHomeStanze
 import com.example.smarthome.R
@@ -35,28 +37,31 @@ val TAG: String = "BTinfo"
 
 class StatisticheActivity : AppCompatActivity() {
 
-    var valore:  String = " "
+    var valore: String = ""
 
 
     companion object {
 
-        var m_myUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-        //var m_myUUID: UUID = UUID.fromString("19b10000-e8f2-537e-4f6c-d104768a1214")
+        var m_myUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")        //HC-05
+
+        //var m_myUUID: UUID = UUID.fromString("19b10000-e8f2-537e-4f6c-d104768a1214")             //arduino ble
         var m_bluetoothSocket: BluetoothSocket? = null
+
         //lateinit var m_progress: ProgressDialog
         lateinit var m_bluetoothAdapter: BluetoothAdapter
         var m_isConnected: Boolean = false
         lateinit var m_address: String
         lateinit var contesto: Context
-        var back:Boolean = false
+        var back: Boolean = false
     }
 
 
     private fun sendCommand(input: String) {
-        if (m_isConnected  && m_bluetoothSocket != null) {
+        if (m_isConnected && m_bluetoothSocket != null) {
             try {
                 //manda comando in bytearray
                 m_bluetoothSocket!!.outputStream.write(input.toByteArray())
+                m_bluetoothSocket!!.outputStream.flush()
                 Log.d(TAG, "Bluetooth command sent succesfully!")
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -65,38 +70,51 @@ class StatisticheActivity : AppCompatActivity() {
         } else {
             Log.d(TAG, "bluetooth socket is null!!")
         }
+
+
+
     }
 
     //funzion per mandare comando di aggiornamento e ricevere i dati
+    @RequiresApi(Build.VERSION_CODES.M)
     private suspend fun getData() {
 
         sendCommand("connesso")
         val buffer = ByteArray(1024)
         var bytes: Int
+        var readMessage: String = ""
 
-        //il ciclo while continua a ciclare?
-        //valore[valore.lastIndex] != ';'
-        if(m_isConnected) {
-            while (true) {
-                try {
-                    bytes = m_bluetoothSocket!!.inputStream.read(buffer)
-                    var readMessage = String(buffer, 0, bytes)
-                    valore = valore + readMessage
-                    Log.d(TAG, valore)
-                } catch (ex: Exception) {
-                    ex.printStackTrace()
-                    Log.d(TAG, "getBTdata fallito ")
-                    break
-                }
+        //Log.d(TAG, m_bluetoothSocket!!.inputStream.read(buffer,2,2).toString())
+
+        if (m_isConnected) {
+
+            try {
+                Log.d(TAG, "getBTdata entra")
+
+                //legge da buffer stringa in input e assegna numero byte ricevuti
+                 bytes = m_bluetoothSocket!!.inputStream.read(buffer)
+
+                //conversione da byte array a Stringa
+                readMessage = readMessage + String(buffer, 0, bytes)
+
+                Log.d(TAG, readMessage)
+                Log.d(TAG, "getBTdata esce")
+
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+                Log.d(TAG, "getBTdata fallito ")
             }
-            Log.d(TAG, "getBTData terminato")
+            Log.d(TAG, "getBTdata uscito dal try ")
+
+        } else {
+            Log.d(TAG, "non connesso")
+            val toast = Toast.makeText(
+                contesto, "Non connesso",
+                Toast.LENGTH_LONG
+            )
+            toast.show()
         }
-        else{
-            Log.d(TAG,"non connesso")
-        }
-
-
-
+        Log.d(TAG, "getBTData terminato")
 
     }
 
@@ -127,7 +145,7 @@ class StatisticheActivity : AppCompatActivity() {
         }
 
         override fun doInBackground(vararg p0: Void?): String? {
-            while (m_bluetoothSocket == null || !m_isConnected || !back){
+            while (m_bluetoothSocket == null || !m_isConnected || !back) {
 
                 try {
                     if (m_address == "null" || m_address == null || m_address == "") {
@@ -143,7 +161,8 @@ class StatisticheActivity : AppCompatActivity() {
                         val device: BluetoothDevice = m_bluetoothAdapter.getRemoteDevice(m_address)
 
                         //bluetooth socket null poichè non crea rfconsocket connection
-                        m_bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
+                        m_bluetoothSocket =
+                            device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
 
 
                         //cancella la scoperta di dispositivi
@@ -189,7 +208,83 @@ class StatisticheActivity : AppCompatActivity() {
         }
     }
 
+    fun setUI() {
+        Log.d(TAG, "entra in set UI")
+        //lista di view
+        val views =
+            mutableListOf(textViewTempo, tempInput, switch1, switch2, textViewSeekbar, seekBar3)
+        //lista per dati
+        var stringheDati: MutableList<String> = mutableListOf()
 
+        //indici per individuare views
+        val textviewseek: Int = 4
+        val seek: Int = 5
+        val textTemp: Int = 0
+        val tempInput: Int = 1
+        val switch1: Int = 2
+        val switch2: Int = 3
+
+        var fine: Int = valore.indexOf(';', 0)
+        var pos: Int = 0
+        var med: Int = 0
+        var i: Int = 0
+        var tmp: Int
+
+        while (pos != -1) {
+            Log.d(TAG, "entra in ciclo while UI")
+            pos = valore.indexOf('-', med)
+            Log.d(TAG, "valore di pos: $pos")
+            //se il valore di pos al primo elemento è zero allora significa
+            //che è stato inviato dati solo per un sensore
+            if (i == 0 && pos == -1) {
+                stringheDati.add(i, valore.subSequence(0, fine).toString())
+            } else {
+                stringheDati.add(i, valore.subSequence(med, pos).toString())
+            }
+
+            med = pos
+            Log.d(TAG, "stringheDAti: " + stringheDati[i])
+            i++
+        }
+
+        //ottiene range
+        var indices = stringheDati.indices
+
+        for (i in indices) {
+            pos = stringheDati[i].indexOf('(')
+            //se non viene specificato nulla tra parentesi allora non sono presenti
+            if (pos == -1) {
+                pos = stringheDati[i].indexOf(':')
+            }
+            var view = stringheDati[i].subSequence(i, pos).toString()
+            if (view.startsWith(' ')) {
+                view = view.subSequence(1, view.lastIndex + 1).toString()
+            }
+
+            Log.d(TAG, "-" + view + "-")
+            if (view == "textTemp") {
+                //7 var Temperatura : String = valore.subSequence(0,pos).toString() + "° C"
+                //tempInput.setText(Temperatura)
+            } else if (view == "stat") {
+
+            } else if (view == "switch1") {
+
+            } else if (view == "switch2") {
+
+            } else if (view == "seekbar") {
+                Log.d(TAG, "imposta seekbar ")
+                pos = stringheDati[i].indexOf('(')
+
+                var next = stringheDati[i].indexOf(')')
+
+                textViewSeekbar.setText(stringheDati[i].subSequence(pos + 1, next).toString())
+                //seekBar3.progress = ( stringheDati[i].subSequence(pos,stringheDati[i].lastIndex).toString().toInt() )
+
+            }
+        }
+
+
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -227,23 +322,30 @@ class StatisticheActivity : AppCompatActivity() {
         ConnectToDevice(this).execute()
 
 
-
-
         //refresh per ottenere dati
         refresh.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
+
                 getData()
-                setUI()
+                //setUI()
             }
         }
 
-        //azione per switch
+        //azione per switch1
         switch1.setOnClickListener {
-            if(switch1.isChecked){
-                sendCommand("acceso")
+            if (switch1.isChecked) {
+                sendCommand("${switch1.text}:acceso")
+            } else {
+                sendCommand("${switch1.text}:spento")
             }
-            else{
-                sendCommand("spento")
+        }
+
+        //azione per switch2
+        switch2.setOnClickListener {
+            if (switch2.isChecked) {
+                sendCommand("${switch2.text}:acceso")
+            } else {
+                sendCommand("${switch2.text}:spento")
             }
         }
 
@@ -253,7 +355,8 @@ class StatisticheActivity : AppCompatActivity() {
 
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
                 //stampa in toast per utente
-                Toast.makeText(applicationContext,seekBar3.progress.toString(),Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, seekBar3.progress.toString(), Toast.LENGTH_SHORT)
+                    .show()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -263,14 +366,14 @@ class StatisticheActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 // manda valore ad arduino
-                sendCommand("${textViewSeekbar.text}:${seekBar3.progress}")
+                Log.d(TAG, "${textViewSeekbar.text}:${seekBar3.progress};")
+                sendCommand("tenda:${seekBar3.progress}")
 
             }
         })
 
 
     }
-
 
 
     override fun onStart() {
@@ -280,7 +383,7 @@ class StatisticheActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
 
-        back =true
+        back = true
 
 
         try {
@@ -293,29 +396,6 @@ class StatisticheActivity : AppCompatActivity() {
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         startActivity(intent)
 
-    }
-
-    fun setUI(){
-        //lista di view
-        val views = mutableListOf(textViewTempo,tempInput,switch1,switch2,textViewSeekbar,seekBar3)
-        var stringheDati : MutableList<String>
-        val textviewseek:Int = 4
-        val seek:Int = 5
-        val texttemp:Int = 0
-        val tempinput:Int = 1
-        val switch1:Int =2
-        val switch2:Int = 3
-        var fine : Int = valore.indexOf(';',0)
-        var pos:Int = 0
-        var i:Int = 0
-
-        while(pos < fine){
-            stringheDati.add(i,valore.subSequence(0,pos).toString())
-
-        }
-
-        //7 var Temperatura : String = valore.subSequence(0,pos).toString() + "° C"
-        //tempInput.setText(Temperatura)
     }
 
 

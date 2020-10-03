@@ -4,8 +4,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen"
-        android:background="#4AD2FF">
+        android:background="#43BEE8"
+        android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen">
 
     <ImageView
             android:id="@+id/imageView"

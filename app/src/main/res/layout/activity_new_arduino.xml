@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#4AD2FF">
+            android:background="#43BEE8">
 
         <ImageButton
                 android:id="@+id/menu"
