@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:keepScreenOn="true"
-        tools:context=".StatHome.StatisticheActivity">
-
+        android:visibility="visible">
 
     <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,188 +23,215 @@
             android:id="@+id/menu3"
             android:layout_width="32dp"
             android:layout_height="27dp"
-            android:layout_marginStart="29dp"
-            android:layout_marginLeft="29dp"
-            android:layout_marginTop="22dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
             android:background="#00FFFFFF"
             android:scaleType="fitCenter"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/menu" />
-
-    <TextView
-            android:id="@+id/textViewTempo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="Temperature "
-            android:textColor="#FAFFFFFF"
-            android:textSize="22dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/menu3" />
-
-    <TextView
-            android:id="@+id/tempInput"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="- - - - °C"
-            android:textSize="28dp"
-            app:layout_constraintBottom_toTopOf="@+id/view"
-            app:layout_constraintEnd_toEndOf="@+id/textViewTempo"
-            app:layout_constraintStart_toStartOf="@+id/textViewTempo"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTempo" />
-
-    <View
-            android:id="@+id/view"
-            android:layout_width="250dp"
-            android:layout_height="1.5dp"
-            android:layout_marginTop="32dp"
-            android:background="#34FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tempInput" />
-
-    <TextView
-            android:id="@+id/textViewStat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Statistics"
-            android:textColor="#FFFFFF"
-            android:textSize="25dp"
-            app:layout_constraintEnd_toEndOf="@+id/textViewTempo"
-            app:layout_constraintStart_toStartOf="@+id/textViewTempo"
-            app:layout_constraintTop_toBottomOf="@+id/view" />
-
-    <FrameLayout
-            android:id="@+id/frameLayout"
-            android:layout_width="411dp"
-            android:layout_height="150dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewStat"
-            app:layout_constraintVertical_bias="0.026">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/menu"
+            tools:srcCompat="@drawable/menu" />
 
-        <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" />
-    </FrameLayout>
-
-    <TextView
-            android:id="@+id/nomeStanza"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/textViewTempo"
-            app:layout_constraintEnd_toEndOf="@+id/textViewTempo"
-            app:layout_constraintHorizontal_bias="0.493"
-            app:layout_constraintStart_toStartOf="@+id/textViewTempo"
-            app:layout_constraintTop_toBottomOf="@+id/menu3"
-            app:layout_constraintVertical_bias="0.0" />
-
-    <FrameLayout
-            android:id="@+id/frameLayout2"
+    <ScrollView
+            android:id="@+id/scrollView4"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="46dp"
-            app:layout_constraintBottom_toTopOf="@+id/refresh"
+            android:layout_height="0dp"
+            android:keepScreenOn="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintTop_toBottomOf="@+id/menu3"
+            tools:context=".StatHome.StatisticheActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="251dp">
-
-            <View
-                    android:id="@+id/view2"
-                    android:layout_width="250dp"
-                    android:layout_height="1.5dp"
-                    android:background="#34FFFFFF"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
-
-            <Switch
-                    android:id="@+id/switch1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Switch"
-                    android:textOff="Off"
-                    android:textOn="On"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.498"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view2"
-                    app:layout_constraintVertical_bias="0.18" />
-
-            <Switch
-                    android:id="@+id/switch2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="Switch"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/switch1"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/switch1"
-                    app:layout_constraintTop_toBottomOf="@+id/switch1"
-                    app:layout_constraintVertical_bias="0.0" />
-
-            <SeekBar
-                    android:id="@+id/seekBar3"
-                    style="@style/Widget.AppCompat.SeekBar.Discrete"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:max="10"
-                    android:progress="0"
-                    android:progressBackgroundTint="#4444"
-                    android:progressTint="#FFF"
-                    android:thumbTint="#FFF"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/textViewSeekbar"
-                    app:layout_constraintStart_toStartOf="@+id/textViewSeekbar"
-                    app:layout_constraintTop_toBottomOf="@+id/switch2"
-                    app:layout_constraintVertical_bias="0.68" />
+                android:layout_height="wrap_content"
+                android:keepScreenOn="true"
+                tools:context=".StatHome.StatisticheActivity">
 
             <TextView
-                    android:id="@+id/textViewSeekbar"
+                    android:id="@+id/nomeStanza"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginBottom="16dp"
                     android:text="TextView"
-                    app:layout_constraintBottom_toTopOf="@+id/seekBar3"
-                    app:layout_constraintEnd_toEndOf="@+id/switch2"
-                    app:layout_constraintStart_toStartOf="@+id/switch2"
-                    app:layout_constraintTop_toBottomOf="@+id/switch2"
-                    app:layout_constraintVertical_bias="0.6" />
+                    app:layout_constraintEnd_toEndOf="@+id/textViewTempo"
+                    app:layout_constraintHorizontal_bias="0.506"
+                    app:layout_constraintStart_toStartOf="@+id/textViewTempo"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
-                    android:id="@+id/refresh"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="#00FFFFFF"
-                    android:scaleType="center"
+            <TextView
+                    android:id="@+id/textViewTempo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Temperature "
+                    android:textColor="#FAFFFFFF"
+                    android:textSize="22dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.546"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nomeStanza" />
+
+            <TextView
+                    android:id="@+id/tempInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="- - - - °C"
+                    android:textSize="28dp"
+                    app:layout_constraintBottom_toTopOf="@+id/view"
+                    app:layout_constraintEnd_toEndOf="@+id/textViewTempo"
+                    app:layout_constraintStart_toStartOf="@+id/textViewTempo"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewTempo" />
+
+            <View
+                    android:id="@+id/view"
+                    android:layout_width="250dp"
+                    android:layout_height="1.5dp"
+                    android:layout_marginTop="32dp"
+                    android:background="#57CDF4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tempInput" />
+
+            <TextView
+                    android:id="@+id/textViewStat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Statistics"
+                    android:textColor="#FFFFFF"
+                    android:textSize="25dp"
+                    app:layout_constraintEnd_toEndOf="@+id/textViewTempo"
+                    app:layout_constraintStart_toStartOf="@+id/textViewTempo"
+                    app:layout_constraintTop_toBottomOf="@+id/view" />
+
+            <FrameLayout
+                    android:id="@+id/frameLayout"
+                    android:layout_width="411dp"
+                    android:layout_height="200dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/seekBar3"
-                    app:layout_constraintStart_toStartOf="@+id/seekBar3"
-                    app:layout_constraintTop_toBottomOf="@+id/seekBar3"
-                    app:srcCompat="@android:drawable/stat_notify_sync_noanim" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewStat"
+                    app:layout_constraintVertical_bias="0.026">
+
+                <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                    android:id="@+id/frameLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/frameLayout">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="251dp">
+
+                    <View
+                            android:id="@+id/view2"
+                            android:layout_width="250dp"
+                            android:layout_height="1.5dp"
+                            android:background="#57CDF4"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0" />
+
+                    <Switch
+                            android:id="@+id/switch1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Switch"
+                            android:textOff="Off"
+                            android:textOn="On"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.498"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/view2"
+                            app:layout_constraintVertical_bias="0.18" />
+
+                    <Switch
+                            android:id="@+id/switch2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="24dp"
+                            android:text="Switch"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/switch1"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="@+id/switch1"
+                            app:layout_constraintTop_toBottomOf="@+id/switch1"
+                            app:layout_constraintVertical_bias="0.0" />
+
+                    <SeekBar
+                            android:id="@+id/seekBar3"
+                            style="@style/Widget.AppCompat.SeekBar.Discrete"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:max="10"
+                            android:progress="0"
+                            android:progressBackgroundTint="#4444"
+                            android:progressTint="#FFF"
+                            android:thumbTint="#FFF"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/textViewSeekbar"
+                            app:layout_constraintStart_toStartOf="@+id/textViewSeekbar"
+                            app:layout_constraintTop_toBottomOf="@+id/switch2"
+                            app:layout_constraintVertical_bias="0.68" />
+
+                    <TextView
+                            android:id="@+id/textViewSeekbar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="32dp"
+                            android:layout_marginBottom="16dp"
+                            android:text="TextView"
+                            app:layout_constraintBottom_toTopOf="@+id/seekBar3"
+                            app:layout_constraintEnd_toEndOf="@+id/switch2"
+                            app:layout_constraintStart_toStartOf="@+id/switch2"
+                            app:layout_constraintTop_toBottomOf="@+id/switch2"
+                            app:layout_constraintVertical_bias="0.6" />
+
+                    <ImageButton
+                            android:id="@+id/refresh"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="#00FFFFFF"
+                            android:scaleType="center"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/seekBar3"
+                            app:layout_constraintStart_toStartOf="@+id/seekBar3"
+                            app:layout_constraintTop_toBottomOf="@+id/seekBar3"
+                            app:srcCompat="@android:drawable/stat_notify_sync_noanim" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </FrameLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </FrameLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
