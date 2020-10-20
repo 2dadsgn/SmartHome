@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import com.example.smarthome.ActivityStanze.HomeStanzeActivity
 import com.example.smarthome.ActivityStanze.fragHomeStanze
 import com.example.smarthome.R
@@ -25,13 +27,19 @@ import com.example.smarthome.Room.AppClassDatabase
 import com.example.smarthome.createNewArduino.newArduinoActivty
 import com.example.smarthome.viewModel.HomeStatModel
 import kotlinx.android.synthetic.main.activity_statistiche.*
+import kotlinx.android.synthetic.main.activity_statistiche.view.*
 import kotlinx.android.synthetic.main.frag_home.*
+import kotlinx.android.synthetic.main.fragment_scelta_stanza.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.io.UTFDataFormatException
 import java.util.*
+import java.util.concurrent.Executor
+import kotlin.properties.Delegates.observable
 
 val TAG: String = "BTinfo"
 
@@ -53,8 +61,17 @@ class StatisticheActivity : AppCompatActivity() {
         lateinit var m_address: String
         lateinit var contesto: Context
         var back: Boolean = false
-    }
 
+        class adapter {
+            var is_Connected: String by observable("false") { _, oldValue, newValue ->
+                onTitleChanged?.invoke(oldValue, newValue)
+            }
+
+            var onTitleChanged: ((String, String) -> Unit)? = null
+        }
+
+        val adattatore = adapter()
+    }
 
     private fun sendCommand(input: String) {
         if (m_isConnected && m_bluetoothSocket != null) {
@@ -72,51 +89,38 @@ class StatisticheActivity : AppCompatActivity() {
         }
 
 
-
     }
 
-    //funzion per mandare comando di aggiornamento e ricevere i dati
+    //funzion per mandare comando di aggiornamento e ricevere i dati secondo android developer
     @RequiresApi(Build.VERSION_CODES.M)
     private suspend fun getData() {
-
+        //manda comando di connessione e per poi ricevere dati
         sendCommand("connesso")
-        val buffer = ByteArray(1024)
-        var bytes: Int
+
+        var numBytes: Int // bytes returned from read()
+        val mmInStream: InputStream = m_bluetoothSocket!!.inputStream
+        val mmOutStream: OutputStream = m_bluetoothSocket!!.outputStream
+        val mmBuffer: ByteArray = ByteArray(1024) // mmBuffer store for the stream
         var readMessage: String = ""
 
-        //Log.d(TAG, m_bluetoothSocket!!.inputStream.read(buffer,2,2).toString())
 
-        if (m_isConnected) {
+        // Keep listening to the InputStream until the string received contains a ';'
+        while (!(readMessage.contains(';'))) {
+            // Read from the InputStream.
+            numBytes = try {
+                mmInStream.read(mmBuffer)
 
-            try {
-                Log.d(TAG, "getBTdata entra")
-
-                //legge da buffer stringa in input e assegna numero byte ricevuti
-                 bytes = m_bluetoothSocket!!.inputStream.read(buffer)
-
-                //conversione da byte array a Stringa
-                readMessage = readMessage + String(buffer, 0, bytes)
-
-                Log.d(TAG, readMessage)
-                Log.d(TAG, "getBTdata esce")
-
-            } catch (ex: Exception) {
-                ex.printStackTrace()
-                Log.d(TAG, "getBTdata fallito ")
+            } catch (e: IOException) {
+                Log.d(TAG, "Input stream was disconnected", e)
+                break
             }
-            Log.d(TAG, "getBTdata uscito dal try ")
+            //conversione da byte array a Stringa
+            readMessage = readMessage + String(mmBuffer, 0, numBytes)
 
-        } else {
-            Log.d(TAG, "non connesso")
-            val toast = Toast.makeText(
-                contesto, "Non connesso",
-                Toast.LENGTH_LONG
-            )
-            toast.show()
         }
-        Log.d(TAG, "getBTData terminato")
-
+        valore = readMessage
     }
+
 
     private fun disconnect() {
         if (m_bluetoothSocket != null) {
@@ -131,9 +135,13 @@ class StatisticheActivity : AppCompatActivity() {
         finish()
     }
 
-    private class ConnectToDevice(c: Context) : AsyncTask<Void, Void, String>() {
+
+
+    private class ConnectToDevice(c: Context) : AsyncTask<Void, Void, String>(){
         private var connectSuccess: Boolean = false
         private val context: Context
+
+
 
         init {
             this.context = c
@@ -199,72 +207,67 @@ class StatisticheActivity : AppCompatActivity() {
                     contesto, "Connected",
                     Toast.LENGTH_LONG
                 )
-                //invia comando connesso ad arduino
-                //m_bluetoothSocket!!.outputStream.write("c".toByteArray())
+
+                adattatore.is_Connected = "true"
                 toast.show()
 
             }
-            //m_progress.dismiss()
+
         }
     }
 
     fun setUI() {
-        Log.d(TAG, "entra in set UI")
-        //lista di view
-        val views =
-            mutableListOf(textViewTempo, tempInput, switch1, switch2, textViewSeekbar, seekBar3)
+
         //lista per dati
         var stringheDati: MutableList<String> = mutableListOf()
 
-        //indici per individuare views
-        val textviewseek: Int = 4
-        val seek: Int = 5
-        val textTemp: Int = 0
-        val tempInput: Int = 1
-        val switch1: Int = 2
-        val switch2: Int = 3
-
         var fine: Int = valore.indexOf(';', 0)
         var pos: Int = 0
-        var med: Int = 0
         var i: Int = 0
         var tmp: Int
 
+
+        //ciclo con il quale spezzo la stringa valore in substring per ogni sensore
+        // e inserisco in array
         while (pos != -1) {
-            Log.d(TAG, "entra in ciclo while UI")
-            pos = valore.indexOf('-', med)
-            Log.d(TAG, "valore di pos: $pos")
+            pos = valore.indexOf('-')
+
             //se il valore di pos al primo elemento è zero allora significa
             //che è stato inviato dati solo per un sensore
-            if (i == 0 && pos == -1) {
-                stringheDati.add(i, valore.subSequence(0, fine).toString())
+            if (pos == -1) {
+                var fine: Int = valore.indexOf(';')
+                stringheDati.add(i, valore.substring(0, fine))
+                //taglia la stringa
+                valore = ""
             } else {
-                stringheDati.add(i, valore.subSequence(med, pos).toString())
+                //altrimenti abbiamo più dati
+                stringheDati.add(i, valore.subSequence(0, pos).toString())
+                //taglia la stringa
+                valore = valore.substring(++pos)
             }
-
-            med = pos
-            Log.d(TAG, "stringheDAti: " + stringheDati[i])
             i++
         }
 
         //ottiene range
         var indices = stringheDati.indices
 
+        //ciclo for per inserire le singole stringhe nei view appositi
         for (i in indices) {
             pos = stringheDati[i].indexOf('(')
             //se non viene specificato nulla tra parentesi allora non sono presenti
             if (pos == -1) {
                 pos = stringheDati[i].indexOf(':')
             }
-            var view = stringheDati[i].subSequence(i, pos).toString()
+            var view = stringheDati[i].substring(0, pos)
             if (view.startsWith(' ')) {
                 view = view.subSequence(1, view.lastIndex + 1).toString()
             }
 
-            Log.d(TAG, "-" + view + "-")
-            if (view == "textTemp") {
-                //7 var Temperatura : String = valore.subSequence(0,pos).toString() + "° C"
-                //tempInput.setText(Temperatura)
+            //a seconda della temperatura cambia colore testo
+            if (view == "temperatura") {
+                var Temperatura: String = stringheDati[i].substring(++pos) + "° C"
+                tempInput.setText(Temperatura)
+
             } else if (view == "stat") {
 
             } else if (view == "switch1") {
@@ -272,14 +275,14 @@ class StatisticheActivity : AppCompatActivity() {
             } else if (view == "switch2") {
 
             } else if (view == "seekbar") {
-                Log.d(TAG, "imposta seekbar ")
+
                 pos = stringheDati[i].indexOf('(')
 
                 var next = stringheDati[i].indexOf(')')
 
-                textViewSeekbar.setText(stringheDati[i].subSequence(pos + 1, next).toString())
-                //seekBar3.progress = ( stringheDati[i].subSequence(pos,stringheDati[i].lastIndex).toString().toInt() )
-
+                textViewSeekbar.setText(stringheDati[i].substring(++pos, next))
+                next = next + 2
+                seekBar3.progress = stringheDati[i].substring(next).toInt()
             }
         }
 
@@ -287,6 +290,7 @@ class StatisticheActivity : AppCompatActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         contesto = applicationContext
@@ -321,15 +325,26 @@ class StatisticheActivity : AppCompatActivity() {
         //effettua connessione all'arduino
         ConnectToDevice(this).execute()
 
+        //invia comando connesso per poi ricevere dati
+        //attenzione arduino impiega alcuni secondi per inviare stringa
+        sendCommand("connesso")
 
-        //refresh per ottenere dati
-        refresh.setOnClickListener {
+        //listener per variabile connesso
+        //alla connessione rimuove la sfocatura e aggiorna i dati
+        adattatore.onTitleChanged = { oldValue, newValue->
+
+            constraintActivityStatistiche.foreground = null
+            progressBar3.isVisible = false
+
             CoroutineScope(Dispatchers.Main).launch {
-
                 getData()
-                //setUI()
+                setUI()
             }
+
+
         }
+
+
 
         //azione per switch1
         switch1.setOnClickListener {
@@ -351,33 +366,43 @@ class StatisticheActivity : AppCompatActivity() {
 
         //seekbar listener
         seekBar3.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-
-
-            override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                //stampa in toast per utente
-                Toast.makeText(applicationContext, seekBar3.progress.toString(), Toast.LENGTH_SHORT)
-                    .show()
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                TODO("Not yet implemented")
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-                // Do something
-
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+                TODO("Not yet implemented")
             }
+
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 // manda valore ad arduino
                 Log.d(TAG, "${textViewSeekbar.text}:${seekBar3.progress};")
-                sendCommand("tenda:${seekBar3.progress}")
+                sendCommand("${textViewSeekbar.text}:${seekBar3.progress}")
+                //stampa in toast per utente
+                Toast.makeText(applicationContext, seekBar3.progress.toString(), Toast.LENGTH_SHORT)
+                    .show()
 
             }
         })
-
 
     }
 
 
     override fun onStart() {
         super.onStart()
+    }
+
+    //interrompe connessione quando app messa in background
+    override fun onPause() {
+        super.onPause()
+
+        try {
+            disconnect()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+
     }
 
     override fun onBackPressed() {
