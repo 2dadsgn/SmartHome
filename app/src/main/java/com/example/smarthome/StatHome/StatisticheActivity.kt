@@ -265,8 +265,23 @@ class StatisticheActivity : AppCompatActivity() {
 
             //a seconda della temperatura cambia colore testo
             if (view == "temperatura") {
-                var Temperatura: String = stringheDati[i].substring(++pos) + "° C"
+                var Temperatura: String = stringheDati[i].substring(++pos)
+                var  valoreTemp:Int = Temperatura.toInt()
+                Temperatura = Temperatura +  "° C"
                 tempInput.setText(Temperatura)
+
+                if (valoreTemp>= 20 && valoreTemp<=25){
+                    tempInput.setTextColor(Color.parseColor("#ffdcc7"));
+                }
+                else if (valoreTemp>25 && valoreTemp<=30){
+                    tempInput.setTextColor(Color.parseColor("#fa8282"));
+                }
+                else if(valoreTemp>30){
+                    tempInput.setTextColor(Color.parseColor("#fa6464"))
+                }
+                else{
+                    tempInput.setTextColor(Color.parseColor("#a8e1ff"));
+                }
 
             } else if (view == "stat") {
 
@@ -344,6 +359,8 @@ class StatisticheActivity : AppCompatActivity() {
 
         }
 
+        //azione di aggiornamenti dati ogni
+
 
 
         //azione per switch1
@@ -367,11 +384,11 @@ class StatisticheActivity : AppCompatActivity() {
         //seekbar listener
         seekBar3.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                TODO("Not yet implemented")
+               //do nothing
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
-                TODO("Not yet implemented")
+               //do nothing
             }
 
 

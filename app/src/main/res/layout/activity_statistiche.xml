@@ -95,7 +95,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="- - - - °C"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#4FFFFFFF"
                         android:textSize="28dp"
                         app:layout_constraintBottom_toTopOf="@+id/view"
                         app:layout_constraintEnd_toEndOf="@+id/textViewTempo"
@@ -107,7 +107,7 @@
                         android:layout_width="250dp"
                         android:layout_height="1.5dp"
                         android:layout_marginTop="32dp"
-                        android:background="#57CDF4"
+                        android:background="#9F40E9FF"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tempInput" />
@@ -160,7 +160,7 @@
                                 android:id="@+id/view2"
                                 android:layout_width="250dp"
                                 android:layout_height="1.5dp"
-                                android:background="#57CDF4"
+                                android:background="#9F40E9FF"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -222,18 +222,6 @@
                                 app:layout_constraintStart_toStartOf="@+id/switch2"
                                 app:layout_constraintTop_toBottomOf="@+id/switch2"
                                 app:layout_constraintVertical_bias="0.6" />
-
-                        <ImageButton
-                                android:id="@+id/refresh"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="#00FFFFFF"
-                                android:scaleType="center"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="@+id/seekBar3"
-                                app:layout_constraintStart_toStartOf="@+id/seekBar3"
-                                app:layout_constraintTop_toBottomOf="@+id/seekBar3"
-                                app:srcCompat="@android:drawable/stat_notify_sync_noanim" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
