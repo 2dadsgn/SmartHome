@@ -6,3 +6,6 @@ In my case I can control two step-motors connected to a curtain, so i can lift i
 
 <h3>How's realized?</h3>
 It's realized in kotlin for the user's side (android app), and in C++ for the arduino's side.
+
+<h3>Here's the other related project for the arduino</h3>
+https://github.com/2dadsgn/SmartHome-Arduino
