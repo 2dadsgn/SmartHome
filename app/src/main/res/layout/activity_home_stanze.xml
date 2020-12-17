@@ -35,4 +35,15 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/menu" />
 
+    <FrameLayout
+            android:id="@+id/menu_laterale"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="#63B6FF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

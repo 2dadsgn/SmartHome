@@ -9,14 +9,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP
 import android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.TextKeyListener.clear
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -27,6 +30,8 @@ import com.example.smarthome.SearchArduinoBT.SearchArduinoActivity
 import com.example.smarthome.StatHome.StatisticheActivity
 import com.example.smarthome.createNewArduino.newArduinoActivty
 import com.example.smarthome.viewModel.HomeStatModel
+import kotlinx.android.synthetic.main.activity_home_stanze.*
+import kotlinx.android.synthetic.main.activity_statistiche.view.*
 import kotlinx.android.synthetic.main.frag_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,6 +61,8 @@ class HomeStanzeActivity : AppCompatActivity(),
 
     lateinit var db :AppClassDatabase
 
+    var url:String? = "http://google.com"
+
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -67,6 +74,17 @@ class HomeStanzeActivity : AppCompatActivity(),
         FragManager.add(R.id.fragmentHolderHome, FragHome)
         FragManager.addToBackStack(null)
         FragManager.commit()
+
+        /*apertura menu laterale su click su menu*/
+        menu2.setOnClickListener {
+            //per poter aprire il menu
+            val params: ViewGroup.LayoutParams = menu_laterale.layoutParams
+            params.width = 500
+           
+
+
+
+        }
 
         aggiornaListaModel()
     }

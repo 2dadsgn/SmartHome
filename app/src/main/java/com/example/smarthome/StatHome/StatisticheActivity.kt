@@ -24,6 +24,7 @@ import com.example.smarthome.ActivityStanze.HomeStanzeActivity
 import com.example.smarthome.ActivityStanze.fragHomeStanze
 import com.example.smarthome.R
 import com.example.smarthome.Room.AppClassDatabase
+import com.example.smarthome.Room.Data
 import com.example.smarthome.createNewArduino.newArduinoActivty
 import com.example.smarthome.viewModel.HomeStatModel
 import kotlinx.android.synthetic.main.activity_statistiche.*
@@ -47,12 +48,16 @@ class StatisticheActivity : AppCompatActivity() {
 
     var valore: String = ""
 
+    
+
+
+
 
     companion object {
 
         var m_myUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")        //HC-05
 
-        //var m_myUUID: UUID = UUID.fromString("19b10000-e8f2-537e-4f6c-d104768a1214")             //arduino ble
+        var ble_33_UUID: UUID = UUID.fromString("19b10000-e8f2-537e-4f6c-d104768a1214")             //arduino ble
         var m_bluetoothSocket: BluetoothSocket? = null
 
         //lateinit var m_progress: ProgressDialog
@@ -71,6 +76,8 @@ class StatisticheActivity : AppCompatActivity() {
         }
 
         val adattatore = adapter()
+
+        var code : String? = "null"
     }
 
     private fun sendCommand(input: String) {
@@ -149,7 +156,7 @@ class StatisticheActivity : AppCompatActivity() {
 
         override fun onPreExecute() {
             super.onPreExecute()
-            //m_progress = ProgressDialog.show(context, "Connecting...", "please wait")
+
         }
 
         override fun doInBackground(vararg p0: Void?): String? {
@@ -168,9 +175,19 @@ class StatisticheActivity : AppCompatActivity() {
 
                         val device: BluetoothDevice = m_bluetoothAdapter.getRemoteDevice(m_address)
 
-                        //bluetooth socket null poichè non crea rfconsocket connection
-                        m_bluetoothSocket =
-                            device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
+
+
+                        // se hc-06 utilizza proprio UUID altrimenti per 33iot
+                        if( (code!!.contains("hc-05")) ){
+                            m_bluetoothSocket =
+                                device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
+
+                        }
+                        else{
+                            m_bluetoothSocket =
+                                device.createInsecureRfcommSocketToServiceRecord(ble_33_UUID)
+                        }
+
 
 
                         //cancella la scoperta di dispositivi
@@ -194,7 +211,7 @@ class StatisticheActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             if (!connectSuccess) {
-                Log.i("data", "couldn't connect")
+
                 val toast = Toast.makeText(
                     contesto, "Connection unsuccesful",
                     Toast.LENGTH_LONG
@@ -203,17 +220,17 @@ class StatisticheActivity : AppCompatActivity() {
 
             } else {
                 m_isConnected = true
-                val toast = Toast.makeText(
-                    contesto, "Connected",
-                    Toast.LENGTH_LONG
-                )
-
                 adattatore.is_Connected = "true"
-                toast.show()
 
             }
 
         }
+    }
+
+    //todo funzione per inserimento dati in DB
+    private suspend fun insDB(soggetto:String, dato:String){
+
+
     }
 
     fun setUI() {
@@ -270,6 +287,11 @@ class StatisticheActivity : AppCompatActivity() {
                 Temperatura = Temperatura +  "° C"
                 tempInput.setText(Temperatura)
 
+                //crea oggetto dato
+                //var dato = Data(valoreTemp,"ABC",)
+                //inserisce in database
+               // db.dataDao().insertAll()
+
                 if (valoreTemp>= 20 && valoreTemp<=25){
                     tempInput.setTextColor(Color.parseColor("#ffdcc7"));
                 }
@@ -311,10 +333,12 @@ class StatisticheActivity : AppCompatActivity() {
         contesto = applicationContext
 
 
-        setContentView(R.layout.activity_statistiche)
+        setContentView(R.layout.activity_no_statistiche)
 
         //Crea DB
         var db = AppClassDatabase.get(application)
+
+
 
         CoroutineScope(Dispatchers.Default).launch {
             Log.d(TAG, HomeStanzeActivity.ActualStanza!!)
@@ -322,10 +346,10 @@ class StatisticheActivity : AppCompatActivity() {
             nomeStanza.setText(HomeStanzeActivity.ActualStanza.toString())
 
             //ottiene codice arduino stanza
-            var code = db.stanzaDao().findByName(HomeStanzeActivity.ActualStanza!!).ArduinoCode
+            code = db.stanzaDao().findByName(HomeStanzeActivity.ActualStanza!!).ArduinoCode
 
             //ottiene address arduino
-            var address = db.arduinoDao().getOneWithID(code).address
+            var address = db.arduinoDao().getOneWithID(code.toString()).address
 
             //impostat address in companion object
             try {

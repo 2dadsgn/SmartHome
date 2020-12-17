@@ -130,8 +130,6 @@ class newArduinoActivty : AppCompatActivity(),
 
                 if (result == null && ediTextArduinoCode.text.toString() != "") {
 
-
-
                     //imposta codice arduino da mostrare in frag successiva
                     model.ArduinoCode = ediTextArduinoCode.text.toString()
 
