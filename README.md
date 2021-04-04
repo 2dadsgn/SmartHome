@@ -1,8 +1,9 @@
 # Smart Home
-<h3>What's the purpose of it?</h3>
-My goal was to create an automation app capable of connecting to any arduino board equipped with bluetooth HC-06 and using a communication's standard.
-Through the main page you can create your specify your own device and control them, through the seekbar or the on/off buttons or through many more views.
-In my case I can control two step-motors connected to a curtain, so i can lift it up or down.
+<h3>How it works</h3>
+The project has the purpose to bring an automation app capable of connecting to any arduino board equipped with bluetooth HC-05 by using a standard communication.
+It's possible to manage different rooms (in which the arduino is placed), there are some widgets like switches and seekbars for any kinf of purpose.
+The app automatically detect what kind of data is sent by the arduino and put it in the right widget for the user interaction.
+
 
 <h3>How's realized?</h3>
 It's realized in kotlin for the user's side (android app), and in C++ for the arduino's side.
