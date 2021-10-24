@@ -8,9 +8,8 @@ The data sharing between the app and the arduino is based on the bluetooth commu
 <h4>In my case I used the app to control the blinds in my room, normal blinds but automated with arduino nano, bluetooth adapter HC-05 and stepper motors.</h4>
 
 
-<img src="https://ibb.co/VV12gwf">
-
-<img src="https://ibb.co/C0zSBvs">
+<a href="https://ibb.co/VV12gwf"><img src="https://i.ibb.co/9nDsbZQ/ILLUSTRATION-100.jpg" alt="ILLUSTRATION-100" border="0"></a>
+<a href="https://ibb.co/C0zSBvs"><img src="https://i.ibb.co/WK6RnFp/diagram-100.jpg" alt="diagram-100" border="0"></a>
 
 
 
